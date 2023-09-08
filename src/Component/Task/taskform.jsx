@@ -1,4 +1,3 @@
-// TaskForm.js
 import React, { useState, useEffect } from 'react';
 import { useTask } from '../../Contexts/TaskContext';
 import { useTeam } from '../../Contexts/TeamContext';
@@ -8,38 +7,39 @@ import localforage from 'localforage';
 function TaskForm() {
   const { createTask } = useTask();
   const { existingTeams } = useTeam();
-  const {user}=useAuth()
+  const { user } = useAuth();
   const [userTeams, setUserTeams] = useState([]);
 
   useEffect(() => {
     const fetchUserTeams = async () => {
       try {
         const teams = [];
-  
+
         for (const teamName of existingTeams) {
           const teamData = await localforage.getItem(`team_${teamName}`);
-          
+
           if (teamData && teamData.members) {
             const isUserMember = teamData.members.some(
               (member) => member && member.username === user?.username
             );
-  
+
             if (isUserMember) {
               teams.push(teamName);
             }
           }
         }
-  
+
         setUserTeams(teams);
       } catch (error) {
         console.error('Error fetching user teams:', error);
       }
     };
-  
+
     if (user && existingTeams.length) {
       fetchUserTeams();
     }
-  }, [existingTeams, user]); // Access the existing teams from TeamContext
+  }, [existingTeams, user]);
+
   const [newTask, setNewTask] = useState({
     title: '',
     description: '',
@@ -57,82 +57,100 @@ function TaskForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
     createTask({ ...newTask, id: Date.now(), status: 'Not Started' });
-    // Clear the form fields or redirect to task list
+    // Clear the form fields or redirect to the task list
   };
 
   return (
-    <div>
-      <div>
-  <h2>Create a New Task</h2>
-  <form onSubmit={handleSubmit}>
-    <div>
-      <label htmlFor="title">Title:</label>
-      <input
-        type="text"
-        id="title"
-        name="title"
-        placeholder="Title"
-        value={newTask.title}
-        onChange={handleInputChange}
-      />
-    </div>
-    <div>
-      <label htmlFor="description">Description:</label>
-      <input
-        type="text"
-        id="description"
-        name="description"
-        placeholder="Description"
-        value={newTask.description}
-        onChange={handleInputChange}
-      />
-    </div>
-    <div>
-      <label htmlFor="dueDate">Due Date:</label>
-      <input
-        type="date"
-        id="dueDate"
-        name="dueDate"
-        placeholder="Due Date"
-        value={newTask.dueDate}
-        onChange={handleInputChange}
-      />
-    </div>
-    <div>
-    <label htmlFor="priority">Priority:</label>
-      <select
-        id="priority"
-        name="priority"
-        value={newTask.priority}
-        onChange={handleInputChange}
-      >
-        <option value="">Select Priority</option>
-        <option value="High">High</option>
-        <option value="Medium">Medium</option>
-        <option value="Low">Low</option>
-      </select>
-    </div>
-    {/* Add labels and inputs for other task properties */}
-    <div>
-      <label htmlFor="assignedTeam">Assigned Team:</label>
-      <select
-        id="assignedTeam"
-        name="assignedTeam"
-        value={newTask.assignedTeam}
-        onChange={handleInputChange}
-      >
-        <option value="">Select Team</option>
-        {userTeams.map((teamName) => (
-          <option key={teamName} value={teamName}>
-            {teamName}
-          </option>
-        ))}
-      </select>
-    </div>
-    <button type="submit">Create Task</button>
-  </form>
-</div>
-
+    <div className="min-h-screen bg-gray-100 py-8">
+      <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
+        <h2 className="text-2xl font-semibold mb-4">Create a New Task</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label htmlFor="title" className="block text-sm font-medium text-gray-700">
+              Title:
+            </label>
+            <input
+              type="text"
+              id="title"
+              name="title"
+              placeholder="Title"
+              value={newTask.title}
+              onChange={handleInputChange}
+              className="mt-1 p-2 w-full border rounded-md border-gray-300 focus:outline-none focus:ring focus:ring-blue-400"
+            />
+          </div>
+          <div className="mb-4">
+            <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+              Description:
+            </label>
+            <input
+              type="text"
+              id="description"
+              name="description"
+              placeholder="Description"
+              value={newTask.description}
+              onChange={handleInputChange}
+              className="mt-1 p-2 w-full border rounded-md border-gray-300 focus:outline-none focus:ring focus:ring-blue-400"
+            />
+          </div>
+          <div className="mb-4">
+            <label htmlFor="dueDate" className="block text-sm font-medium text-gray-700">
+              Due Date:
+            </label>
+            <input
+              type="date"
+              id="dueDate"
+              name="dueDate"
+              placeholder="Due Date"
+              value={newTask.dueDate}
+              onChange={handleInputChange}
+              className="mt-1 p-2 w-full border rounded-md border-gray-300 focus:outline-none focus:ring focus:ring-blue-400"
+            />
+          </div>
+          <div className="mb-4">
+            <label htmlFor="priority" className="block text-sm font-medium text-gray-700">
+              Priority:
+            </label>
+            <select
+              id="priority"
+              name="priority"
+              value={newTask.priority}
+              onChange={handleInputChange}
+              className="mt-1 p-2 w-full border rounded-md border-gray-300 focus:outline-none focus:ring focus:ring-blue-400"
+            >
+              <option value="">Select Priority</option>
+              <option value="High">High</option>
+              <option value="Medium">Medium</option>
+              <option value="Low">Low</option>
+            </select>
+          </div>
+          <div className="mb-4">
+            <label htmlFor="assignedTeam" className="block text-sm font-medium text-gray-700">
+              Assigned Team:
+            </label>
+            <select
+              id="assignedTeam"
+              name="assignedTeam"
+              value={newTask.assignedTeam}
+              onChange={handleInputChange}
+              className="mt-1 p-2 w-full border rounded-md border-gray-300 focus:outline-none focus:ring focus:ring-blue-400"
+            >
+              <option value="">Select Team</option>
+              {userTeams.map((teamName) => (
+                <option key={teamName} value={teamName}>
+                  {teamName}
+                </option>
+              ))}
+            </select>
+          </div>
+          <button
+            type="submit"
+            className="w-full py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400"
+          >
+            Create Task
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
