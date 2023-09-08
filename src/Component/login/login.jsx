@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import localforage from 'localforage';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../Contexts/AuthContext';
 
 function Login() {
   const [formData, setFormData] = useState({ username: '', password: '' });
-
+  const navigate = useNavigate()
+  const { login } = useAuth();
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -24,7 +27,8 @@ function Login() {
       // Verify the password (you should hash and compare passwords in a real app)
       if (userData.password === formData.password) {
         console.log('Login successful!');
-        // Perform login actions, e.g., redirect the user
+        login(userData);
+        navigate('/dashboard')
       } else {
         console.log('Incorrect password.');
       }

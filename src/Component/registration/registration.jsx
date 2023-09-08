@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import localforage from 'localforage';
+import { useNavigate } from 'react-router-dom';
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -11,6 +12,7 @@ function Register() {
   });
   const [error, setError] = useState('');
   const [isUsernameTaken, setIsUsernameTaken] = useState(false);
+  const navigate = useNavigate()
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -66,6 +68,7 @@ function Register() {
       });
       console.log(localforage.getItem(userId));
 
+      navigate('/login')
       // Redirect the user to the login page or handle it as needed
       // You can use React Router for routing.
     } catch (err) {

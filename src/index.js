@@ -4,6 +4,10 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import localforage from 'localforage';
+import { AuthProvider } from './Contexts/AuthContext';
+import { BrowserRouter } from 'react-router-dom';
+import { TeamProvider } from './Contexts/TeamContext';
+import { TaskProvider } from './Contexts/TaskContext';
 
 // Configure LocalForage
 localforage.config({
@@ -13,7 +17,15 @@ localforage.config({
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter>
+      <AuthProvider>
+        <TeamProvider>
+          <TaskProvider>
+            <App />
+        </TaskProvider>
+        </TeamProvider>
+      </AuthProvider>
+    </BrowserRouter>
   </React.StrictMode>
 );
 
